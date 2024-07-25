@@ -47,24 +47,27 @@ function AppContent() {
   return (
     <Router>
         <div className="App min-h-screen bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark">
-          <nav className="bg-primary-light dark:bg-primary-dark p-4">
-            <ul className="flex justify-center space-x-4">
-              <li>
-                <NavLink to="/" className={({ isActive }) => 
-                  isActive ? "text-white font-bold" : "text-white hover:underline"
-                }>
-                  To-Do List
-                </NavLink>
-              </li>
-              <li>
-                <NavLink to="/profile" className={({ isActive }) => 
-                  isActive ? "text-white font-bold" : "text-white hover:underline"
-                }>
-                  Profile
-                </NavLink>
-              </li>
-            </ul>
-          </nav>
+          {user && (
+  <nav className="bg-primary-light dark:bg-primary-dark p-4">
+  <ul className="flex justify-center space-x-4">
+    <li>
+      <NavLink to="/" className={({ isActive }) => 
+        isActive ? "text-white font-bold" : "text-white hover:underline"
+      }>
+        To-Do List
+      </NavLink>
+    </li>
+    <li>
+      <NavLink to="/profile" className={({ isActive }) => 
+        isActive ? "text-white font-bold" : "text-white hover:underline"
+      }>
+        Profile
+      </NavLink>
+    </li>
+  </ul>
+</nav>
+          )}
+        
 
           <Routes>
             <Route path="/login" element={<Login />} />
