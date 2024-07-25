@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateProfile } from 'firebase/auth';
-import { doc, updateDoc } from 'firebase/firestore';
+import { doc, setDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { auth, db, storage } from '../firebase';
 import { setUser } from '../store/authSlice';
@@ -16,6 +16,7 @@ function Profile() {
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
 
   useEffect(() => {
     if (user) {
@@ -35,6 +36,7 @@ function Profile() {
     e.preventDefault();
     setLoading(true);
     setError(null);
+    setSuccess(null);
 
     try {
       let updatedPhotoURL = photoURL;
@@ -50,11 +52,11 @@ function Profile() {
         photoURL: updatedPhotoURL,
       });
 
-      await updateDoc(doc(db, 'users', auth.currentUser.uid), {
+      await setDoc(doc(db, 'users', auth.currentUser.uid), {
         displayName: name,
         email: email,
         photoURL: updatedPhotoURL,
-      });
+      }, { merge: true });  
 
       dispatch(setUser({
         ...user,
@@ -65,8 +67,10 @@ function Profile() {
 
       setPhotoURL(updatedPhotoURL);
       setFile(null);
+      setSuccess('Profile updated successfully!');
     } catch (err) {
       setError(err.message);
+      console.error('Error updating profile:', err);
     } finally {
       setLoading(false);
     }
@@ -80,6 +84,7 @@ function Profile() {
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4 dark:text-white">Profile</h1>
       {error && <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4 dark:bg-red-900 dark:border-red-700 dark:text-red-300" role="alert">{error}</div>}
+      {success && <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4 dark:bg-green-900 dark:border-green-700 dark:text-green-300" role="alert">{success}</div>}
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block mb-2 dark:text-white">Name:</label>
