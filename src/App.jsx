@@ -9,6 +9,7 @@ import Login from './components/Login';
 import PrivateRoute from './components/PrivateRoute';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './firebase';  
+import Register from './components/Register';
 
 
 function AppContent() {
@@ -72,6 +73,8 @@ function AppContent() {
 
           <Routes>
             <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+
             <Route path="/" element={
               <PrivateRoute>
                 <TodoList />

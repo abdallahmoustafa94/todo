@@ -10,7 +10,7 @@ function PrivateRoute({ children }) {
     return <div>Loading...</div>;
   }
   
-  return auth.user ? children : <Navigate to="/login" />;
+  return auth.user ? children : <Navigate to="/register" />;
 }
 
 export default PrivateRoute;
