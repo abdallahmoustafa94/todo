@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, NavLink } from 'react-router-dom';
-import { Provider, useDispatch } from 'react-redux';
+import { Provider, useDispatch, useSelector } from 'react-redux';
 import store from './store';
 import { setOnline, setOffline } from './store/networkSlice';
 import TodoList from './components/TodoList';
@@ -13,6 +13,7 @@ import { auth } from './firebase';
 
 function AppContent() {
   const dispatch = useDispatch();
+  const user = useSelector(state => state.auth.user);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
