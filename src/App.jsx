@@ -93,9 +93,7 @@ function AppContent() {
 
 function App() {
   return (
-    <Provider store={store}>
       <AppContent />
-    </Provider>
   );
 }
 
