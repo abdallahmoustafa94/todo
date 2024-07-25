@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { updateProfile } from 'firebase/auth';
+import { updateProfile, signOut } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { auth, db, storage } from '../firebase';
-import { setUser } from '../store/authSlice';
+import { setUser, clearUser } from '../store/authSlice';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 
 function Profile() {
   const user = useSelector(state => state.auth.user);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [name, setName] = useState(user?.displayName || '');
   const [email, setEmail] = useState(user?.email || '');
   const [photoURL, setPhotoURL] = useState(user?.photoURL || '');
@@ -76,6 +78,17 @@ function Profile() {
     }
   };
 
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      dispatch(clearUser());
+      navigate('/login');
+    } catch (error) {
+      console.error('Error signing out:', error);
+      setError('Failed to log out. Please try again.');
+    }
+  };
+
   if (!user) {
     return <div className="text-center mt-8 dark:text-white">Loading...</div>;
   }
@@ -124,6 +137,16 @@ function Profile() {
           {loading ? 'Updating...' : 'Update Profile'}
         </motion.button>
       </form>
+      <div className="mt-8">
+        <motion.button 
+          onClick={handleLogout}
+          className="bg-red-500 text-white p-2 rounded dark:bg-red-600"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          Logout
+        </motion.button>
+      </div>
     </div>
   );
 }
